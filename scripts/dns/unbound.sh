@@ -85,7 +85,7 @@ if [ -z "${FORCE_DNS+x}" ]; then
 fi
 
 if [ -n "${FORCE_DNS}" ]; then
-    grep -q "dport 53 -j DNAT" /etc/firewall.user || echo "iptables -t nat -A PREROUTING -i br-+ -p udp --dport 53 -j DNAT --to 127.0.0.1" >> /etc/firewall.user
-    grep -q "dport 853 -j DNAT" /etc/firewall.user || echo "iptables -t nat -A PREROUTING -i br-+ -p tcp --dport 853 -j DNAT --to 127.0.0.1" >> /etc/firewall.user
+    grep -q "dport 53 -j REDIRECT" /etc/firewall.user || echo "iptables -t nat -A PREROUTING -i br-+ -p udp --dport 53 -j REDIRECT --to-port 53" >> /etc/firewall.user
+    grep -q "dport 853 -j REDIRECT" /etc/firewall.user || echo "iptables -t nat -A PREROUTING -i br-+ -p tcp --dport 853 -j REDIRECT --to-port 853" >> /etc/firewall.user
     /etc/init.d/firewall reload
 fi
