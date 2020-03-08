@@ -40,4 +40,4 @@ uci commit adblock
 /etc/init.d/adblock enable
 
 # The reload command updates our spam lists.
-grep adblock /etc/crontabs/root || echo "0 4 * * *    /etc/init.d/adblock reload" >> /etc/crontabs/root
+grep -q adblock /etc/crontabs/root || echo "0 4 * * *    /etc/init.d/adblock reload" >> /etc/crontabs/root
