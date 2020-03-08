@@ -54,9 +54,7 @@ dhcp_add() {
 set dhcp.${NAME}=dhcp
 set dhcp.${NAME}.interface='${NAME}'
 set dhcp.${NAME}.dhcpv4='server'
-set dhcp.${NAME}.dhcpv6='disabled'
-set dhcp.${NAME}.ra='server'
-set dhcp.${NAME}.ndp='hybrid'
+set dhcp.${NAME}.dhcpv6='server'
 set dhcp.${NAME}.start=100
 set dhcp.${NAME}.limit=150
 set dhcp.${NAME}.leasetime='1h'

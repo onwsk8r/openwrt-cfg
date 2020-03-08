@@ -6,7 +6,7 @@ The scripts in this repository are designed to automate standing up OpenWRT, muc
 
 This repo assumes you are familiar with OpenWRT, Linux, networking, and all that. Some of the scripts might be safe-ish, but many will not be compatible with different versions of LEDE/OpenWRT or different routers. Altering network settings and router settings can make your router unreachable, unstable, or a paperweight. I managed to get a load average of 90 (on a dual core ARM) when trying to configure relaying.
 
-These scripts have been tested on a Linksys WRT3200ACM running OpenWRT 18.04, and are built on the OpenWRT documentation found at
+These scripts were originally developed for a Linksys WRT3200ACM running OpenWRT 18.06, have been tested on both a WRT3200ACM and WRT1900AC and are built on the OpenWRT documentation found at
 
 - <https://oldwiki.archive.openwrt.org/doc/howto/start>
 - <https://openwrt.org/docs/guide-user/start>
@@ -85,10 +85,7 @@ Keep your local configuration in this directory. They will likely:
 ## TODO
 
 - Lock down the Avahi daemon configuration (does anything _actually use_ Zeroconf for DNS/etc?), and see if `uwpxy` can be used to convert those multicasts to unicasts for WiFi clients.
-- Make SQM determine link bandwidth automagically
-- Make IPv6 configuration better, it's flaky with my `/64` PD from Spectrum.
-- [Firewall Configuration](https://openwrt.org/docs/guide-user/firewall/start) could likely use some tuning
-- Fix `unbound_control` per note in `unbound.sh`
+- Use encryption for `unbound-control` app
 
 ### Missing Monitoring
 

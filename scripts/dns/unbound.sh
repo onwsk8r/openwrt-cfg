@@ -26,7 +26,6 @@ cd $(dirname $(readlink -f $0))
 <unbound_srv.conf cat >/etc/unbound/unbound_srv.conf
 
 ## --- No need for DNSMasq (_DNS_ masq, dys?) - odhcpd will do the trick
-# Also, configure the LAN DHCP to use SLAAC. We can't all have huge prefixes...
 opkg remove dnsmasq odhcpd-ipv6only
 opkg install odhcpd
 uci -q delete dhcp.@dnsmasq[0]
@@ -35,9 +34,7 @@ set dhcp.odhcpd.maindhcp=1
 set dhcp.odhcpd.leasefile='/var/lib/odhcpd/dhcp.leases'
 set dhcp.odhcpd.leasetrigger='/usr/lib/unbound/odhcpd.sh'
 set dhcp.lan.dhcpv4='server'
-set dhcp.lan.dhcpv6='disabled'
-set dhcp.lan.ra='server'
-set dhcp.lan.ndp='server'
+set dhcp.lan.dhcpv6='server'
 set dhcp.lan.leasetime='1h'
 set network.lan.ip6assign=64
 EOF
@@ -48,12 +45,8 @@ uci commit network.lan
 # some basic (read: lock your doors) security, configures resource
 # usage for a reasonably modern router and a reasonably fast internet
 # and enables DNSSEC.
-# NOTE: the `unbound_control` setting does not seem to work as intended
-# Setting to 1 does not actually enable it in the generated config file,
-# but the default setup allows unencrypted connections, so it does
-# actually work.
 uci batch <<EOF
-set unbound.@unbound[-1].add_local_fqdn=3
+set unbound.@unbound[-1].add_local_fqdn=2
 set unbound.@unbound[-1].add_wan_fqdn=1
 set unbound.@unbound[-1].dhcp_link='odhcpd'
 set unbound.@unbound[-1].domain='${LOCAL_DOMAIN:-openwrt}'
@@ -69,6 +62,8 @@ set unbound.@unbound[-1].recursion='aggressive'
 set unbound.@unbound[-1].resource='medium'
 set unbound.@unbound[-1].unbound_control=1
 set unbound.@unbound[-1].validator=1
+set unbound.@unbound[-1].validator_ntp=1
+set unbound.@unbound[-1].enabled=1
 EOF
 uci commit unbound
 

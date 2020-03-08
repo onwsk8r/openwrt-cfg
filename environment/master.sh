@@ -34,6 +34,19 @@ set network.lan.stp=1
 EOF
 uci commit network.lan
 
+# If your ISP uses IPv6 Prefix Delegation, you'll need to make sure
+# the delegated prefix is large enough to provide at least a /64 subnet
+# for each IPv6 enabled network.
+# If the key below is set, the wan6 interface will request a prefix, and
+# `ifstatus wan6 | jq '."ipv6-prefix"'` will say if it has one.
+# The most common PD sizes are /56 and /64, with /64 being the OpenWRT default.
+uci set network.wan6.reqprefix='56'
+uci commit network.wan6
+# The default IPv6 setup and the one used here will use DHCPv6 to assign
+# addresses, although odhcpd can be configured to use SLAAC and RA.
+# An alternative would be to use EUI64 (6to4), where clients use IPv4
+# and the router can opt to forward traffic over an IPv6 link.
+
 uci -q delete wireless.default_radio0 # Delete the existing default wifis
 new_wifi 'radio0' 'lan' 'my-wifi' "${KEY}" # Make a WiFi on the LAN
 
@@ -49,6 +62,6 @@ new_wifi 'radio0' 'insecure' 'unsafe-things' 'secret3r'
 firewall_add_forward 'lan' 'insecure' # Allow access from the LAN
 
 # Use avahi-daemon to pass multicasts between the interfaces
-# Google devices, like Apple devices, use Zeroconf (read: mDNS)
+# Google and Apple devices use Zeroconf (read: mDNS)
 AVAHI_IFS="br-lan,br-insecure"
 $SCRIPTS_DIR/network/mdns.sh
