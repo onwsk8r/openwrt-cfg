@@ -6,7 +6,7 @@
 # to know they were installing packages with "simple" in the name? Frankly, this
 # looks pretty simple to me.
 # VARIBLES
-# BLOCKLISTS:="adguard bitcoin malware malwarelist openphish ransomware winspy"}
+# BLOCKLISTS:="adaway adguard bitcoin disconnect dshield hphosts malware malwarelist notracking openphish shalla spam404 sysctl ut_capitole whocares winspy winhelp yoyo"}
 # Note that BLOCKLISTS is not an array - the values map to UCI keys, so they won't have
 # spaces. These values plus the defaults should not break anything.
 # uci set adblock.${list}.enabled=0 to disable a list
@@ -31,7 +31,7 @@ set adblock.global.adb_fetchutil='curl'
 set adblock.extra.adb_maxqueue=16
 EOF
 
-echo "Enabling blocklists ${BLOCKLISTS:="adguard bitcoin malware malwarelist openphish ransomware winspy"}"
+echo "Enabling blocklists ${BLOCKLISTS:="adaway adguard bitcoin disconnect dshield hphosts malware malwarelist notracking openphish shalla spam404 sysctl ut_capitole whocares winspy winhelp yoyo"}"
 for blocklist in $BLOCKLISTS; do
     uci set adblock.${blocklist}.enabled=1
 done
