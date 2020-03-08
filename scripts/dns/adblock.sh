@@ -8,6 +8,7 @@
 # VARIBLES
 # BLOCKLISTS:="adaway adguard bitcoin disconnect dshield hphosts malware malwarelist notracking openphish shalla spam404 sysctl ut_capitole whocares winspy winhelp yoyo"}
 # WHITELIST:=(storage.googleapis.com)
+# BLACKLIST:=()
 # Note that BLOCKLISTS is not an array - the values map to UCI keys, so they won't have
 # spaces. These values plus the defaults should not break anything.
 # uci set adblock.${list}.enabled=0 to disable a list
@@ -25,6 +26,7 @@ opkg list-installed | grep -q ^curl || opkg install curl
 # coreutils-sort is used to do something like `cat /all/the/*.list | sort -u`
 opkg install adblock luci-app-adblock coreutils-sort
 
+## -- Set some global settings
 uci batch <<EOF
 set adblock.global.adb_enabled=1
 set adblock.global.adb_dns='unbound'
@@ -33,11 +35,31 @@ set adblock.extra.adb_maxqueue=16
 set adblock.extra.adb_nice=10
 EOF
 
+## -- Ensure all of the blocklists are enabled
 echo "Enabling blocklists ${BLOCKLISTS:="adaway adguard bitcoin disconnect dshield hphosts malware malwarelist notracking openphish shalla spam404 sysctl ut_capitole whocares winspy winhelp yoyo"}"
 for blocklist in $BLOCKLISTS; do
     uci set adblock.${blocklist}.enabled=1
 done
 uci commit adblock
+
+## -- Whitelist some domains, maybe
+: ${WHITELIST:=(storage.googleapis.com)}
+if [ -n "${WHITELIST}" ]; then
+    echo "Adding whitelisted domains..."
+    (IFS=$'\n'; echo "${WHITELIST[*]}" > /etc/adblock/adblock.whitelist)
+else
+    echo "Skipping empty whitelist"
+fi
+
+## -- Blacklist some domains, maybe
+: ${BLACKLIST:=()}
+if [ -n "${BLACKLIST}" ]; then
+    echo "Adding blacklisted domains..."
+    (IFS=$'\n'; echo "${BLACKLIST[*]}" > /etc/adblock/adblock.blacklist)
+else
+    echo "Skipping empty blacklist"
+fi
+
 /etc/init.d/adblock restart
 /etc/init.d/adblock enable
 
