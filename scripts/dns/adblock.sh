@@ -7,6 +7,7 @@
 # looks pretty simple to me.
 # VARIBLES
 # BLOCKLISTS:="adaway adguard bitcoin disconnect dshield hphosts malware malwarelist notracking openphish shalla spam404 sysctl ut_capitole whocares winspy winhelp yoyo"}
+# WHITELIST:=(storage.googleapis.com)
 # Note that BLOCKLISTS is not an array - the values map to UCI keys, so they won't have
 # spaces. These values plus the defaults should not break anything.
 # uci set adblock.${list}.enabled=0 to disable a list
@@ -29,6 +30,7 @@ set adblock.global.adb_enabled=1
 set adblock.global.adb_dns='unbound'
 set adblock.global.adb_fetchutil='curl'
 set adblock.extra.adb_maxqueue=16
+set adblock.extra.adb_nice=10
 EOF
 
 echo "Enabling blocklists ${BLOCKLISTS:="adaway adguard bitcoin disconnect dshield hphosts malware malwarelist notracking openphish shalla spam404 sysctl ut_capitole whocares winspy winhelp yoyo"}"
