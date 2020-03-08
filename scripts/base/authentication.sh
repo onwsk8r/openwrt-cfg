@@ -73,7 +73,7 @@ fi
 if [ -n "$USERNAME" ]; then
     opkg install shadow-useradd shadow-groupadd sudo
     groupadd --system sudo
-    sed -i -e 's/^# \(%sudo*\)/\1/' /etc/sudoers
+    grep '%sudo' /etc/sudoers | cut -c3- > /etc/sudoers.d/sudo
     mkdir -p /home
     useradd -d "/home/$USERNAME" -G sudo -s "/bin/bash" -mU  $USERNAME
 
